@@ -17,7 +17,13 @@
         context.buzz = factory();
     }
 })(this, function() {
+    var playerEl = document.createElement("audio");
+    var crossOriginAttribute = document.createAttribute("crossorigin")
     var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+
+    crossOriginAttribute.value = "anonymous";
+    playerEl.setAttributeNode(crossOriginAttribute);
+
     var buzz = {
         audioCtx: AudioContextCtor ? new AudioContextCtor() : null,
         defaults: {
@@ -38,7 +44,7 @@
             m4a: "audio/x-m4a"
         },
         sounds: [],
-        el: document.createElement("audio"),
+        el: playerEl,
         sound: function(src, options) {
             options = options || {};
             var doc = options.document || buzz.defaults.document;
@@ -497,6 +503,11 @@
                     }
                 }
                 this.sound = doc.createElement("audio");
+                
+                var soundCrossOriginAttribute = document.createAttribute("crossorigin");
+                soundCrossOriginAttribute.value = "anonymous";
+                this.sound.setAttributeNode(soundCrossOriginAttribute);
+
                 if (buzz.audioCtx) {
                     this.source = buzz.audioCtx.createMediaElementSource(this.sound);
                     this.source.connect(buzz.audioCtx.destination);
